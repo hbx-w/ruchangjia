@@ -1,0 +1,290 @@
+<link href="/static/admin/umedit/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+<div class="layui-form tools_form" action="" lay-filter="add_ad" style="padding: 0 25px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">楼层</label>
+        <div class="layui-input-block">
+            <script type="text/html" template> 
+            <select name="f_id" id="LAY-select" lay-verify="required" autocomplete="off" >
+            </select>
+            </script>    
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">房间号</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+            <input name="room_num"  lay-verify="required" placeholder="请输入房间号" class="layui-input"  name="room_num" value="{{d.params.room_num||''}}">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">房间类型</label>
+        <div class="layui-input-block">
+            <script type="text/html" template> 
+            <select name="r_id" id="LAY-select_type" lay-verify="required" autocomplete="off" >
+            </select>
+            </script>    
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">房间状态</label>
+        <div class="layui-input-block">
+            <script type="text/html" template> 
+            <select name="rs_id" id="LAY-select_room" lay-verify="required" autocomplete="off" >
+            </select>
+            </script>    
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">房间描述</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+            <textarea name="desc"  lay-verify="required" placeholder="请输入圈子描述内容" class="layui-textarea"  >{{d.params.desc||''}}</textarea>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">面积</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                <input type="number"  lay-verify="required" placeholder="请输入面积" autocomplete="off" class="layui-input" name="area" value="{{d.params.area||'60'}}" >
+            </script>  
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">入住人数</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                <input type="number"  lay-verify="required" placeholder="请输入入住人数" autocomplete="off" class="layui-input" name="people_num" value="{{d.params.people_num||'1'}}" >
+            </script>  
+        </div>
+    </div>
+    <!-- <div class="layui-form-item">
+        <label class="layui-form-label">设施</label>
+        <div class="layui-input-block" id="LAY-equipment">
+            <div class="layui-input-block" id="LAY-equipment" name="rq_id">
+            </div>
+        </div>
+    </div> -->
+    <div class="layui-form-item">
+        <label class="layui-form-label">原价</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                <input type="text"  lay-verify="required" placeholder="请输入原价" autocomplete="off" class="layui-input" name="yprice" value="{{d.params.yprice||''}}" >
+            </script>  
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">现价</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                <input type="text"  lay-verify="required" placeholder="请输入现价" autocomplete="off" class="layui-input" name="price" value="{{d.params.price||''}}" >
+            </script>  
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                <input type="number"  lay-verify="required" placeholder="请输入排序" autocomplete="off" class="layui-input" name="sort" value="{{d.params.sort||'255'}}" >
+            </script>  
+        </div>
+    </div>
+    <!-- <div class="layui-form-item">
+        <label class="layui-form-label">上传图片</label>
+        <div class="layui-input-block">
+            <div class="layui-input-inline" style="width: 220px;">
+                <script type="text/html" template>
+                    <input name="images" lay-verify="required" id="image" placeholder="请上传图片" value="{{d.params.images||''}}"  class="layui-input">
+                </script>
+            </div>
+            <div class="layui-input-inline layui-btn-container" style="width: auto;">
+                <button type="button" class="layui-btn" id="LAY_avatarUpload" style="margin-bottom:0;">
+                    <i class="layui-icon">&#xe67c;</i>上传图片</button>
+                <a class="layui-btn layui-btn-primary" onclick="see_img();" style="margin-bottom:0;">查看图片</a>
+            </div>
+        </div>
+    </div> -->
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+            {{# if(d.params.id){ }}
+                <input type="radio" name="status" value="1" title="已上架" {{ d.params.status=== 1? 'checked': '' }} >
+                <input type="radio" name="status" value="0" title="已下架" {{ d.params.status=== 0? 'checked': '' }}>
+            {{# }else{ }}
+                <input type="radio" name="status" value="1" title="已上架" checked>
+                <input type="radio" name="status" value="0" title="已下架" >
+            {{# } }}
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" lay-submit="" lay-filter="ad_submit"><i
+                    class="layui-icon">&#xe654;</i>保存</button>
+            <button type="button" class="layui-btn layui-btn-danger" data-type="close"><i
+                    class="layui-icon">&#x1006;</i>返回</button>
+        </div>
+    </div>
+</div>
+<script src="/static/admin/layui/lay/modules/jquery.3.1.1.js"></script>
+<script src="/static/admin/umedit/umeditor.config.js"></script>
+<script src="/static/admin/umedit/umeditor.min.js"></script>
+<script src="/static/admin/umedit/lang/zh-cn/zh-cn.js"></script>
+<script type="text/html" template lay-done="layui.data.sendParams(d.params)"></script>
+<script>
+    var um = UM.getEditor('editors', {
+        initialFrameWidth: 600,
+        initialFrameHeight: 350,
+        // imageFieldName:"file" //上传图片的表单的name
+    });
+
+    UM.getEditor('editors').addListener('blur', function (editor) {
+        $('#get_content').val(UM.getEditor('editors').getContent());
+    });
+    
+    layui.data.sendParams = function (params) {
+        layui.use(['admin', 'form', 'upload', 'laydate', 'setter', 'layer'], function () {
+            var $ = layui.$
+                , admin = layui.admin
+                , setter = layui.setter
+                , element = layui.element
+                , form = layui.form
+                , layer = layui.layer
+                , laydate = layui.laydate
+                , upload = layui.upload;
+                
+        // 获取数据
+    if(params.id){
+      // 编辑
+      admin.req({
+            url: layui.setter.baseUrl+'admin/room/room_edit' 
+            ,data:{id:params.id},
+            type:'get',
+            success: function(res){
+                console.log(res);
+            if(res.code==1){
+                // var arr='';
+                // for(var i in res.data.equipment){
+                //     if(res.data.equipment[i].checked==1){
+                //         arr+='<input type="checkbox" name="equipment[]" lay-skin="primary" checked value="'+res.data.equipment[i].id+'" title="'+res.data.equipment[i].equipment+'" id="'+res.data.equipment[i].id+'"/>'
+                //     }else{
+                //         arr+='<input type="checkbox" name="equipment[]" lay-skin="primary" value="'+res.data.equipment[i].id+'" title="'+res.data.equipment[i].equipment+'" id="'+res.data.equipment[i].id+'"/>'
+                //     }
+                // }
+                var list='<option value="">==请选择楼层==</option>';
+                for(var i in res.data.floor){
+                  list+='<option value="'+res.data.floor[i].id+'">'+res.data.floor[i].floor_num+'</option>'
+                }
+                var list_type='<option value="">==请选择房间类型==</option>';
+                for(var i in res.data.type){
+                    list_type+='<option value="'+res.data.type[i].id+'">'+res.data.type[i].type+'</option>'
+                }
+                var list_room='<option value="">==请选择房间状态==</option>';
+                for(var i in res.data.room){
+                    list_room+='<option value="'+res.data.room[i].id+'">'+res.data.room[i].room_status+'</option>'
+                }
+                // $('#LAY-equipment').html(arr);
+                $('#LAY-select').html(list);
+                $('#LAY-select_type').html(list_type);
+                $('#LAY-select_room').html(list_room);
+                $('#LAY-select').val(params.f_id);
+                $('#LAY-select_type').val(params.r_id);
+                $('#LAY-select_room').val(params.rs_id);
+                // $('#LAY-equipment').val(params.rq_id);
+                form.render();
+                }else{
+                    layer.msg(res.msg, {icon: 5,anim: 6,shade:0.5,time: 1500});
+                }
+            }
+        });
+    }
+    else{
+      //添加
+      admin.req({
+            url: layui.setter.baseUrl+'admin/room/room_edit' 
+            ,data:{},
+            type:'get',
+            success: function(res){
+               console.log(res);
+            if(res.code==1){
+                // var arr='';
+                // for(var i in res.data.equipment){
+                //     arr+='<input type="checkbox" name="equipment[]" lay-skin="primary" value="'+res.data.equipment[i].id+'" title="'+res.data.equipment[i].equipment+'" id="'+res.data.equipment[i].id+'"/>'
+                // }
+                var list='<option value="">==请选择楼层==</option>';
+                for(var i in res.data.floor){
+                  list+='<option value="'+res.data.floor[i].id+'">'+res.data.floor[i].floor_num+'</option>'
+                }
+                var list_type='<option value="">==请选择房间类型==</option>';
+                for(var i in res.data.type){
+                    list_type+='<option value="'+res.data.type[i].id+'">'+res.data.type[i].type+'</option>'
+                }
+                var list_room='<option value="">==请选择房间状态==</option>';
+                for(var i in res.data.room){
+                    list_room+='<option value="'+res.data.room[i].id+'">'+res.data.room[i].room_status+'</option>'
+                }
+                // $('#LAY-equipment').html(arr);
+                $('#LAY-select').html(list);
+                $('#LAY-select_type').html(list_type);
+                $('#LAY-select_room').html(list_room);
+                form.render();
+                }else{
+                    layer.msg(res.msg, {icon: 5,anim: 6,shade:0.5,time: 1500});
+                }
+            }
+        });
+
+    }
+    
+            element.render();
+            form.render(null, 'add_ad');
+
+           
+            var $ = layui.$, active = {
+                // 返回--按钮
+                close: function (index) {
+                    layer.closeAll('page');
+                }
+            };
+
+            $('.layui-input-block .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            if(params && params.content){
+                console.log(params.content);
+                UM.getEditor('editors').setContent(params.content);
+            }
+            // 查看图片
+            window.see_img = function () {
+                var i = $('#image').val();
+                layer.photos({
+                    shade: 0.5, closeBtn: 1, anim: 5,
+                    photos: {
+                        title: "查看图片",
+                        data: [{ src: i }]
+                    },
+                });
+            };
+      //多图片上传
+      upload.render({
+        elem: '#LAY_avatarUpload'
+        ,url: layui.setter.baseUrl+'admin/upload/upload'
+        ,multiple: true
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#upload_images_box').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img" style="width:120px;height:120px;margin:0 15px 15px 0px;">')
+            });
+        }
+        ,done: function(res){
+            //上传完毕
+            $('#image').val(res.data);
+        }
+      });
+        });
+    }
+</script>

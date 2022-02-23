@@ -1,0 +1,224 @@
+<title>房间管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a>房间管理</a>
+        <a><cite>房间列表</cite></a>
+    </div>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">房间列表</div>
+                <div class="layui-card-body">
+                    
+                    <div class="test-table-reload-btn" style="margin-bottom: 10px;">    
+                        
+                        <form class="layui-form  layuiadmin-card-header-auto" lay-filter="data_list_search">
+                            <div class="layui-inline">
+                                <input class="layui-input" name="keyword" placeholder="请输入房间号" autocomplete="off">
+                            </div>
+                       
+                            <div class="layui-inline">
+                                <button  class="layui-btn"  lay-submit="" lay-filter="searchData" type="button"><i class="layui-icon layui-icon-search layuiadmin-button-btn"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn" lay-event="add_data"><i class="layui-icon layui-icon-add-1 layuiadmin-button-btn"></i>添加</button>
+                        </div>
+                    </script>
+                    <table class="layui-hide" id="data_list" lay-filter="data_list"></table>
+                    
+                    <script type="text/html" id="tool_data_list">
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                    </script>
+                    <!-- <script type="text/html" id="test-table-images">
+                        <img src="{{d.head_img||'/static/admin/src/style/res/no_img.jpg'}}" height="100%" alt="">
+                    </script>       -->
+                    <script type="text/html" id="test-table-state">
+                        <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="已上架|已下架" class="layui-input" {{ d.status === 1 ? 'checked' : '' }} lay-filter="checkbox_status">
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['admin','table', 'view', 'form', 'util', 'layedit','setter','layer','ourJs'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,setter = layui.setter
+            ,element = layui.element
+            ,form = layui.form
+            ,view = layui.view
+            ,layer = layui.layer
+            ,util = layui.util
+            ,layedit = layui.layedit
+            ,table = layui.table
+            ,ourJs = layui.ourJs
+            ,router = layui.router();
+        
+        form.render(null, 'data_list_search');
+        table.render({
+            elem: '#data_list'
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,url: layui.setter.baseUrl+'admin/room/room_list'
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.code==1?0:1, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.count, //解析数据长度
+                    "data": res.data.lists //解析数据列表
+                };
+            }
+            ,cols: [[
+                {field:'id', width:70, title: 'ID', align:'center'}
+                ,{field:'room_num', title: '房间号', align:'center'}
+                ,{field:'people_num', title: '入住人数', align:'center'}
+                ,{field:'area', title: '面积', align:'center'}
+                ,{field:'desc', title: '房间描述', align:'center'}
+                ,{field:'type', title: '房间类型', align:'center'}
+                ,{field:'floor_num', title: '楼层', align:'center'}
+                ,{field:'room_status', title: '房间状态', align:'center'}
+                // ,{field:'equipment', title: '设施', align:'center'}
+                ,{field:'yprice', title: '原价', align:'center'}
+                ,{field:'price', title: '现价', align:'center'}
+                ,{field:'sort', title: '排序', align:'center'}
+                ,{field:'status', title: '上线', align:'center',templet: "#test-table-state",width:110}
+                ,{field:'create_time', title: '创建时间', align:'center'}
+                ,{field:'update_time', title: '更新时间', align:'center'}
+                ,{fixed: 'right', title: '操作', align:'center',  toolbar: '#tool_data_list',width:150}
+            ]]
+            ,page:true
+        });
+
+   
+
+        //监听搜索
+        form.on('submit(searchData)', function(data){
+            var field = data.field;
+            //执行重载
+            table.reload('data_list', {
+                where: field
+            });
+        });
+
+        table.on('toolbar(data_list)', function(obj){
+            if(obj.event === 'add_data'){
+                admin.popup({
+                    title: "添加房间",
+                    area: admin.screen() < 2 ? ['85%', '50%'] :["600px", "850px"],
+                    id: "LAY-popup-add_ar",
+                    success: function(layero, index){
+                        view(this.id).render('/room/room_add').done(function() {
+                            form.render(null, 'form_add'); // 弹窗的lay-filter值
+                            //监听提交
+                            form.on('submit(ad_submit)', function(data){
+                                admin.req({
+                                    url: layui.setter.baseUrl+'admin/room/room_add'
+                                    ,data: data.field,
+                                    type:'post',
+                                    success: function(res){
+                                        if(res.code==1){
+                                            layer.msg(res.msg , {icon: 1,shade:0.5,time: 1000} , function(){
+                                                layer.close(index); //执行关闭
+                                                layui.table.reload('data_list'); //重载表格
+
+                                            });
+                                        }else{
+                                            layer.msg(res.msg, {icon: 5,anim: 6,shade:0.5,time: 1000});
+                                        }
+                                    }
+                                });
+                            });
+
+                        });
+                    }
+                });
+            }
+        })
+        //监听工具条
+        table.on('tool(data_list)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('确认删除此信息?', {icon: 3, title:'提示'}, function(index){
+                    admin.req({
+                        url: layui.setter.baseUrl+'admin/room/room_del'
+                        ,data: {id:data.id},
+                        type:'post',
+                        success: function(res){
+                            if(res.code==1){
+                                layui.table.reload('data_list'); //重载表格
+                                layer.close(index);
+                            }else{
+                                layer.msg(res.msg);
+                            }
+                        }
+                    });
+                });
+            } else if(obj.event === 'edit'){
+                // 编辑
+                // console.log(data);
+                admin.popup({
+                    title: "编辑房间",
+                    area: admin.screen() < 2 ? ['85%', '50%'] :["600px", "850px"],
+                    id: "LAY-popup-edit_ar",
+                    success: function(layero, index){
+                        view(this.id).render('/room/room_add',data).done(function() {
+                            form.render(null, 'form_add'); // 弹窗的lay-filter值
+                            form.render('select');
+                            //监听提交
+                            form.on('submit(ad_submit)', function(datas){
+                                // console.log(data);
+                                datas.field.id=obj.data.id;
+
+                                admin.req({
+                                    url: layui.setter.baseUrl+'admin/room/room_edit'
+                                    ,data:datas.field,
+                                    type:'post',
+                                    success: function(res){
+                                        if(res.code==1){
+                                            layer.msg(res.msg , {icon: 1,time: 1000} , function(){
+                                                layer.close(index); //执行关闭
+                                                layui.table.reload('data_list'); //重载表格
+                                            });
+                                        }else{
+                                            layer.msg(res.msg, {icon: 5,anim: 6,shade:0.5,time: 1000});
+                                        }
+                                    }
+                                });
+                            });
+
+                        });
+                    }
+                });
+            }
+        });
+
+        // 监听状态修改
+        form.on('switch(checkbox_status)',function(e){
+            var status=e.elem.checked?1:0;
+            admin.req({
+                url: layui.setter.baseUrl+'admin/room/room_state'
+                ,data: {id:e.value,status:status}
+                ,type:'post'
+                ,success: function(res){
+                    if(res.code==1){
+                        layer.msg(res.msg , {icon: 1,time: 1000} , function(){
+                            layui.table.reload('data_list'); //重载表格
+                        });
+                    }else{
+                        layer.msg(res.msg, {icon: 5,anim: 6,shade:0.5,time: 1000});
+                    }
+                }
+            });
+        });
+    });
+
+</script>

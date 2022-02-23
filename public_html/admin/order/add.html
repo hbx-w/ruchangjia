@@ -1,0 +1,131 @@
+<link href="/static/admin/umedit/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+<form class="layui-form promote_form" action="" lay-filter="form_add">
+    <div class="layui-form-item">
+        <label class="layui-form-label">房间号</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="room_num" value="{{ d.params.room_num || ''}}"  placeholder="请输入房间号" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">真实姓名</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="real_name" value="{{ d.params.real_name || ''}}" lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">身份证号码</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="id_card" value="{{ d.params.id_card || ''}}" lay-verify="required" placeholder="请输入身份证号码" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">电话</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="phone" value="{{ d.params.phone || ''}}" lay-verify="required" placeholder="请输入电话" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="sort" value="{{ d.params.sort || '255'}}" lay-verify="required" placeholder="请输入排序" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                {{# if(d.params.id){ }}
+                    <input type="radio" name="is_pay" value="1" title="已支付" {{ d.params.status=== 1? 'checked': '' }} >
+                    <input type="radio" name="is_pay" value="0" title="未支付" {{ d.params.status=== 0 ? 'checked': '' }}>
+                
+                {{# }else{ }}
+                    <input type="radio" name="is_pay" value="1" title="已支付" >
+                    <input type="radio" name="is_pay" value="0" title="未支付" checked>
+                {{# } }}
+
+            </script>  
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                {{# if(d.params.id){ }}
+                    <input type="radio" name="status" value="1" title="已审核" {{ d.params.status=== 1? 'checked': '' }} >
+                    <input type="radio" name="status" value="0" title="未审核" {{ d.params.status=== 0 ? 'checked': '' }}>
+                
+                {{# }else{ }}
+                    <input type="radio" name="status" value="1" title="已审核" >
+                    <input type="radio" name="status" value="0" title="未审核" checked>
+                {{# } }}
+
+            </script>  
+        </div>
+    </div>
+
+   
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button type="button" class="layui-btn" lay-submit lay-filter="form_btn">保存</button>
+          <button type="button" class="layui-btn layui-btn-danger" data-type="close">返回</button>
+        </div>
+    </div>
+
+</form>
+<script type="text/html" template lay-done="layui.data.sendParams(d.params)"></script>
+
+<script src="/static/admin/layui/lay/modules/jquery.3.1.1.js"></script>
+<script src="/static/admin/umedit/umeditor.config.js"></script>
+<script src="/static/admin/umedit/umeditor.min.js"></script>
+<script src="/static/admin/umedit/lang/zh-cn/zh-cn.js"></script>
+<script type="text/html" template lay-done="layui.data.sendParams(d.params)"></script>
+<script>
+    UM.getEditor('editors').addListener('blur', function (editor) {
+        $('#get_content').val(UM.getEditor('editors').getContent());
+    });
+    
+    layui.data.sendParams = function (params) {
+        layui.use(['admin', 'form', 'upload', 'laydate', 'setter', 'layer'], function () {
+            var $ = layui.$
+                , admin = layui.admin
+                , setter = layui.setter
+                , element = layui.element
+                , form = layui.form
+                , layer = layui.layer
+                , laydate = layui.laydate
+                , upload = layui.upload
+                , router = layui.router();
+
+            element.render();
+            form.render(null, 'add_ad');
+
+           
+            var $ = layui.$, active = {
+                // 返回--按钮
+                close: function (index) {
+                    layer.closeAll('page');
+                }
+            };
+
+            $('.layui-input-block .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            if(params && params.content){
+                console.log(params.content);
+                UM.getEditor('editors').setContent(params.content);
+            } 
+        });
+    }
+</script>

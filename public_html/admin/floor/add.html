@@ -1,0 +1,75 @@
+<form class="layui-form promote_form" action="" lay-filter="form_add">
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color: red;">*</span>楼层:</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="floor_num" value="{{ d.params.floor_num || ''}}" lay-verify="required" placeholder="请输入楼层" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                {{# if(d.params.id){ }}
+                    <input type="radio" name="status" value="1" title="开启" {{ d.params.status=== 1? 'checked': '' }} >
+                    <input type="radio" name="status" value="0" title="关闭" {{ d.params.status=== 0 ? 'checked': '' }}>
+                
+                {{# }else{ }}
+                    <input type="radio" name="status" value="1" title="开启" checked>
+                    <input type="radio" name="status" value="0" title="关闭" >
+                {{# } }}
+
+            </script>  
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                <input type="number"  lay-verify="required" placeholder="请输入排序" autocomplete="off" class="layui-input" name="sort" value="{{d.params.sort||'255'}}" >
+            </script>  
+        </div>
+    </div>
+   
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button type="button" class="layui-btn" lay-submit lay-filter="form_btn">保存</button>
+          <button type="button" class="layui-btn layui-btn-danger" data-type="close">返回</button>
+        </div>
+    </div>
+
+</form>
+<script type="text/html" template lay-done="layui.data.sendParams(d.params)"></script>
+
+<script>
+    layui.data.sendParams = function(params){
+        layui.use(['admin','table','form','view','upload','laydate','layer'], function(){
+            var $ = layui.$
+            ,table = layui.table
+            ,form = layui.form
+            ,view = layui.view
+            ,admin = layui.admin
+            ,upload = layui.upload
+            ,layedit = layui.layedit
+            // ,router = layui.router()
+            ,layer = layui.layer;
+            var laydate = layui.laydate;
+            var $ = layui.$, active = {
+                // 返回
+                close:function(index){ 
+                    layer.closeAll('page');
+                }
+            };
+            
+            form.render(); // 弹窗的lay-filter值
+
+            $('.layui-input-block .layui-btn').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+    };
+</script>

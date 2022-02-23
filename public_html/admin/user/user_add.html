@@ -1,0 +1,200 @@
+<link href="/static/admin/umedit/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+<form class="layui-form promote_form" action="" lay-filter="form_add">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户昵称</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="username" value="{{ d.params.username || ''}}" lay-verify="required" placeholder="请输入用户昵称" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">头像:</label>
+        <div class="layui-input-inline">
+          <script type="text/html" template>
+            <input name="head_img" id="head_img" placeholder="头像地址" value="{{ d.params.head_img || '' }}" class="layui-input" style="width:200px;margin-right:20px;">
+          </script>
+        </div>
+        <div class="layui-input-inline layui-btn-container" style="width: auto;margin-left:20px;">
+          <button type="button" class="layui-btn" id="LAY_avatarUpload">
+            <i class="layui-icon">&#xe67c;</i>上传头像
+          </button>
+          <a class="layui-btn layui-btn-primary" onclick="see_img();">查看头像</a>
+        </div>
+      </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">年龄</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="age" value="{{ d.params.age || ''}}"  placeholder="请输入年龄" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">性别</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                {{# if(d.params.gender ===1){ }}
+                    <input type="radio" name="gender" value="1" title="男" checked>
+                    <input type="radio" name="gender" value="0" title="女">
+                
+                {{# }else{ }}
+                    <input type="radio" name="gender" value="1" title="男">
+                    <input type="radio" name="gender" value="0" title="女" checked>
+                {{# } }}
+            </script>  
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">电话</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="phone" value="{{ d.params.phone || ''}}" lay-verify="required" placeholder="请输入电话" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">真实姓名</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="real_name" value="{{ d.params.real_name || ''}}" lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                {{# if(d.params.id){ }}
+                    <input type="radio" name="status" value="1" title="开启" {{ d.params.status=== 1? 'checked': '' }} >
+                    <input type="radio" name="status" value="0" title="关闭" {{ d.params.status=== 0 ? 'checked': '' }}>
+                
+                {{# }else{ }}
+                    <input type="radio" name="status" value="1" title="开启" checked>
+                    <input type="radio" name="status" value="0" title="关闭" >
+                {{# } }}
+
+            </script>  
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>              
+                <input type="number"  lay-verify="required" placeholder="请输入排序" autocomplete="off" class="layui-input" name="sort" value="{{d.params.sort||'255'}}" >
+            </script>  
+        </div>
+    </div>
+   
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button type="button" class="layui-btn" lay-submit lay-filter="form_btn">保存</button>
+          <button type="button" class="layui-btn layui-btn-danger" data-type="close">返回</button>
+        </div>
+    </div>
+
+</form>
+<script type="text/html" template lay-done="layui.data.sendParams(d.params)"></script>
+
+<script src="/static/admin/layui/lay/modules/jquery.3.1.1.js"></script>
+<script src="/static/admin/umedit/umeditor.config.js"></script>
+<script src="/static/admin/umedit/umeditor.min.js"></script>
+<script src="/static/admin/umedit/lang/zh-cn/zh-cn.js"></script>
+<script type="text/html" template lay-done="layui.data.sendParams(d.params)"></script>
+<script>
+    var um = UM.getEditor('editors', {
+        initialFrameWidth: 600,
+        initialFrameHeight: 350,
+        // imageFieldName:"file" //上传图片的表单的name
+    });
+
+    UM.getEditor('editors').addListener('blur', function (editor) {
+        $('#get_content').val(UM.getEditor('editors').getContent());
+    });
+    
+    layui.data.sendParams = function (params) {
+        layui.use(['admin', 'form', 'upload', 'laydate', 'setter', 'layer'], function () {
+            var $ = layui.$
+                , admin = layui.admin
+                , setter = layui.setter
+                , element = layui.element
+                , form = layui.form
+                , layer = layui.layer
+                , laydate = layui.laydate
+                , upload = layui.upload
+                , router = layui.router();
+
+            element.render();
+            form.render(null, 'add_ad');
+
+           
+            var $ = layui.$, active = {
+                // 返回--按钮
+                close: function (index) {
+                    layer.closeAll('page');
+                }
+            };
+
+            $('.layui-input-block .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            if(params && params.content){
+                console.log(params.content);
+                UM.getEditor('editors').setContent(params.content);
+            }
+
+    //         if(params.id){
+    //     // admin/Article/editArticle
+    //     admin.req({
+    //         url: layui.setter.baseUrl+'admin/room/room_edit' //实际使用请改成服务端真实接口
+    //         ,data: {id:params.id},
+    //         type:'get',
+    //         success: function(res){
+    //             if(res.code==1){
+    //                 um.setContent(res.data.params.content);
+    //                 form.val('room_add',{
+    //                     'floor_num':res.data.params.floor_num,
+    //                     'room_num':res.data.params.room_num,
+    //                     'desc':res.data.params.desc,
+    //                     'status':res.data.params.status,
+    //                     'room_status':res.data.params.room_status,
+                        
+    //                 });
+    //             }else{
+    //                 layer.msg(res.msg);
+    //             }       
+    //         } 
+    //     }); 
+    // }
+            // 查看图片
+            window.see_img = function () {
+                var i = $('#image').val();
+                layer.photos({
+                    shade: 0.5, closeBtn: 1, anim: 5,
+                    photos: {
+                        title: "查看图片",
+                        data: [{ src: i }]
+                    },
+                });
+            };
+      //多图片上传
+      upload.render({
+        elem: '#LAY_avatarUpload'
+        ,url: layui.setter.baseUrl+'admin/upload/upload'
+        ,multiple: true
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#upload_images_box').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img" style="width:120px;height:120px;margin:0 15px 15px 0px;">')
+            });
+        }
+        ,done: function(res){
+            //上传完毕
+            $('#image').val(res.data);
+        }
+      });
+        });
+    }
+</script>
